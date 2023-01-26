@@ -58,6 +58,11 @@ Use the following command to start a distributed training using 4 GPUs. The mode
 ```bash
 python -m torch.distributed.launch --nproc_per_node=4 ./tools/train.py CONFIG_PATH
 ```
+**Local CenterPoint**
+```bash
+python -m torch.distributed.launch --nproc_per_node=4 ./tools/train.py /home/rares/repos/CenterPoint/configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py
+
+```
 
 For distributed testing with 4 gpus,
 
