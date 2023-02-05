@@ -57,11 +57,6 @@ Use the following command to start a distributed training using 4 GPUs. The mode
 
 ```bash
 python -m torch.distributed.launch --nproc_per_node=4 ./tools/train.py CONFIG_PATH
-
-```
-**Training one GPU**
-```bash
-python -m torch.distributed.launch --nproc_per_node=1 ./tools/train.py /home/rares/repos/CenterPoint/configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py
 ```
 
 For distributed testing with 4 gpus,
@@ -76,12 +71,6 @@ For testing with one gpu and see the inference time,
 python ./tools/dist_test.py CONFIG_PATH --work_dir work_dirs/CONFIG_NAME --checkpoint work_dirs/CONFIG_NAME/latest.pth --speed_test 
 ```
 
-**class-agnostic CenterPoint - 1 GPU**
-```bash
-python ./tools/dist_test.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --work_dir work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/ --checkpoint work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth --speed_test
-
-```
-
 The pretrained models and configurations are in [MODEL ZOO](../configs/nusc/README.md).
 
 ### Tracking
@@ -93,7 +82,7 @@ You can find the detection files are in the [MODEL ZOO](../configs/nusc/README.m
 python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  
 
 # test set 
-python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  --version v1.0-test  --root data/nuScenes/v1.0-test    
+python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  --version v1.0-test  --root /home/rares/repos/CenterPoint/data/nuscenes//v1.0-test    
 ```
 
 ### Test Set 
@@ -126,19 +115,3 @@ Download the ```centerpoint_voxel_1440_flip``` [here](https://mitprod-my.sharepo
 ```bash
 python tools/dist_test.py configs/nusc/voxelnet/nusc_centerpoint_voxelnet_0075voxel_fix_bn_z_flip.py --work_dir work_dirs/nusc_centerpoint_voxelnet_dcn_0075voxel_flip_testset  --checkpoint work_dirs/nusc_0075_flip/voxelnet_converted.pth  --testset 
 ```
-
-
-Debugging:
-1. Open your project in Visual Studio Code.
-2. Click on the Debugging icon in the View Bar on the side of the editor, or use the Ctrl + Shift + D keyboard shortcut to open the Debugging panel.
-3. In the Debugging panel, click on the gear icon to create a new launch configuration.
-4. In the launch configuration, select Python as the configuration type, then select Python File as the configuration option.
-5. Add the following lines to the launch configuration:
-    "program": "${file}",
-    "args": ["-m", "torch.distributed.launch", "--nproc_per_node=1", "./tools/train.py", "/home/rares/repos/CenterPoint/configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py"],
-    "pythonPath": "${config:python.pythonPath}"
-
-6. In the terminal, navigate to the folder containing your Python file and run the following command to start the debugger:
-    python -m ptvsd --host localhost --port 5678 --wait -m torch.distributed.launch --nproc_per_node=1 ./tools/train.py /home/rares/repos/CenterPoint/configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py
-
-7. In Visual Studio Code, press the F5 key or click on the green play button in the Debugging panel to start the debugger.

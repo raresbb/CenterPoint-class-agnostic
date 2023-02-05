@@ -1,6 +1,7 @@
 from __future__ import division
 
 import re
+import os
 from collections import OrderedDict, defaultdict
 from functools import partial
 
@@ -93,6 +94,7 @@ def batch_processor(model, data, train_mode, **kwargs):
 
     if "local_rank" in kwargs:
         device = torch.device(kwargs["local_rank"])
+        #device = torch.device("cuda", kwargs["local_rank"])
     else:
         device = None
 
@@ -265,7 +267,8 @@ def train_detector(model, dataset, cfg, distributed=False, validate=False, logge
     total_steps = cfg.total_epochs * len(data_loaders[0])
     # print(f"total_steps: {total_steps}")
     if distributed:
-        model = apex.parallel.convert_syncbn_model(model)
+        #model = apex.parallel.convert_syncbn_model(model)
+        model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
     if cfg.lr_config.type == "one_cycle":
         # build trainer
         optimizer = build_one_cycle_optimizer(model, cfg.optimizer)

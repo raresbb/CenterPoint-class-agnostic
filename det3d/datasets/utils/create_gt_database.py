@@ -2,6 +2,7 @@ import pickle
 from pathlib import Path
 import os 
 import numpy as np
+import pdb
 
 from det3d.core import box_np_ops
 from det3d.datasets.dataset_factory import get_dataset
@@ -68,7 +69,7 @@ def create_groundtruth_database(
 
     all_db_infos = {}
     group_counter = 0
-
+    pdb.set_trace()
     for index in tqdm(range(len(dataset))):
         image_idx = index
         # modified to nuscenes

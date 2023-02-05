@@ -37,7 +37,7 @@ def _init_dist_slurm(backend, port=29500, **kwargs):
     ntasks = int(os.environ["SLURM_NTASKS"])
     node_list = os.environ["SLURM_NODELIST"]
     num_gpus = torch.cuda.device_count()
-    torch.cuda.set_device(proc_id % num_gpus)
+    #torch.cuda.set_device(proc_id % num_gpus)
     addr = subprocess.getoutput(
         "scontrol show hostname {} | head -n1".format(node_list)
     )

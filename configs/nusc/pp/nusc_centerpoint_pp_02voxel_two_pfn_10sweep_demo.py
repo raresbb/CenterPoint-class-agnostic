@@ -83,12 +83,12 @@ test_cfg = dict(
 # dataset settings
 dataset_type = "NuScenesDataset"
 nsweeps = 10
-data_root = "data/nuScenes"
+data_root = "data/nuscenes/"
 
 db_sampler = dict(
     type="GT-AUG",
     enable=False,
-    db_info_path="data/nuScenes/dbinfos_train_10sweeps_withvelo.pkl",
+    db_info_path="/home/rares/repos/CenterPoint/data/nuscenes//dbinfos_train_10sweeps_withvelo.pkl",
     sample_groups=[
         dict(car=2),
         dict(truck=3),

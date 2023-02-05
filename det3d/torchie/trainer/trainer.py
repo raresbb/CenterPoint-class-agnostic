@@ -352,7 +352,8 @@ class Trainer(object):
     def batch_processor_inline(self, model, data, train_mode, **kwargs):
 
         if "local_rank" in kwargs:
-            device = torch.device(kwargs["local_rank"])
+            #device = torch.device(kwargs["local_rank"])
+            device = torch.device("cuda", kwargs["local_rank"])
         else:
             device = None
 

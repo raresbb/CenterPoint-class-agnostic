@@ -18,7 +18,7 @@ def worker_func(
 ):
     model = model_cls(**model_kwargs)
     load_checkpoint(model, checkpoint, map_location="cpu")
-    torch.cuda.set_device(gpu_id)
+    #torch.cuda.set_device(gpu_id)
     model.cuda()
     model.eval()
     with torch.no_grad():

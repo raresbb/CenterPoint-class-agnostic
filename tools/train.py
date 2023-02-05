@@ -83,7 +83,7 @@ def main():
 
     if distributed:
         if args.launcher == "pytorch":
-            torch.cuda.set_device(args.local_rank)
+            #torch.cuda.set_device(args.local_rank)
             torch.distributed.init_process_group(backend="nccl", init_method="env://")
             cfg.local_rank = args.local_rank
         elif args.launcher == "slurm":
@@ -92,7 +92,7 @@ def main():
             node_list = os.environ["SLURM_NODELIST"]
             num_gpus = torch.cuda.device_count()
             cfg.gpus = num_gpus
-            torch.cuda.set_device(proc_id % num_gpus)
+            #torch.cuda.set_device(proc_id % num_gpus)
             addr = subprocess.getoutput(
                 f"scontrol show hostname {node_list} | head -n1")
             # specify master port

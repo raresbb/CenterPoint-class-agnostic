@@ -1,6 +1,7 @@
 import copy
 from pathlib import Path
 import pickle
+import pdb
 
 import fire, os
 
@@ -9,6 +10,7 @@ from det3d.datasets.utils.create_gt_database import create_groundtruth_database
 from det3d.datasets.waymo import waymo_common as waymo_ds
 
 def nuscenes_data_prep(root_path, version, nsweeps=10, filter_zero=True, virtual=False):
+    #pdb.set_trace()
     nu_ds.create_nuscenes_infos(root_path, version=version, nsweeps=nsweeps, filter_zero=filter_zero)
     if version == 'v1.0-trainval':
         create_groundtruth_database(

@@ -26,7 +26,7 @@ def parse_args():
         "--checkpoint", help="the dir to checkpoint which the model read from"
     )
     parser.add_argument("--hungarian", action='store_true')
-    parser.add_argument("--root", type=str, default="data/nuScenes")
+    parser.add_argument("--root", type=str, default="data/nuscenes/")
     parser.add_argument("--version", type=str, default='v1.0-trainval')
     parser.add_argument("--max_age", type=int, default=3)
 
