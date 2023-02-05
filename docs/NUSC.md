@@ -32,6 +32,11 @@ Data creation should be under the gpu environment.
 python tools/create_data.py nuscenes_data_prep --root_path=NUSCENES_TRAINVAL_DATASET_ROOT --version="v1.0-trainval" --nsweeps=10
 ```
 
+### current project:
+
+python tools/create_data.py nuscenes_data_prep --root_path=/home/rares/repos/CenterPoint-class-agnostic/data/nuscenes --version="v1.0-trainval" --nsweeps=10
+
+
 In the end, the data and info files should be organized as follows
 
 ```
