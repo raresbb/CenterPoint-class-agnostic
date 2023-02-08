@@ -58,6 +58,11 @@ In the end, the data and info files should be organized as follows
 
 **Now we only support training and evaluation with gpu. Cpu only mode is not supported.**
 
+**class-agnostic CenterPoint - 1 GPU**
+```bash
+python ./tools/dist_test.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --work_dir work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/ --checkpoint work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth --speed_test
+```
+
 Use the following command to start a distributed training using 4 GPUs. The models and logs will be saved to ```work_dirs/CONFIG_NAME``` 
 
 ```bash
