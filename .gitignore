@@ -14,3 +14,5 @@ venv/
 *.zip
 *.bin
 .vscode/
+work_dirs/
+
