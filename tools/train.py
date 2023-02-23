@@ -56,8 +56,8 @@ def parse_args():
     parser.add_argument(
         "--resume-from",
         default=None,
-        help="the checkpoint file to resume from")
-    
+        help="the checkpoint file to resume from"
+    )
     args = parser.parse_args()
     if "LOCAL_RANK" not in os.environ:
         os.environ["LOCAL_RANK"] = str(args.local_rank)
