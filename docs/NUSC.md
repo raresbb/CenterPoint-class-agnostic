@@ -32,6 +32,12 @@ Data creation should be under the gpu environment.
 python tools/create_data.py nuscenes_data_prep --root_path=NUSCENES_TRAINVAL_DATASET_ROOT --version="v1.0-trainval" --nsweeps=10
 ```
 
+### <span style="color:red">CURRENT PROJECT</span>
+```
+python tools/create_data.py nuscenes_data_prep --root_path=data/nuscenes --version="v1.0-trainval" --nsweeps=10
+```
+
+
 In the end, the data and info files should be organized as follows
 
 ```
@@ -52,6 +58,20 @@ In the end, the data and info files should be organized as follows
 ### Train & Evaluate in Command Line
 
 **Now we only support training and evaluation with gpu. Cpu only mode is not supported.**
+
+### <span style="color:red">CLASS AGNOSTIC CENTER POINT 1 GPU</span>
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 ./tools/train.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py
+```
+### <span style="color:red">RESUME TRAINING</span>
+```bash
+python ./tools/train.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --resume-from work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth
+```
+
+**class-agnostic CenterPoint - 1 GPU test**
+```bash
+python ./tools/dist_test.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --work_dir work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/ --checkpoint work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth --speed_test
+```
 
 Use the following command to start a distributed training using 4 GPUs. The models and logs will be saved to ```work_dirs/CONFIG_NAME``` 
 
@@ -80,9 +100,8 @@ You can find the detection files are in the [MODEL ZOO](../configs/nusc/README.m
 ```bash 
 # val set 
 python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  
-
 # test set 
-python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  --version v1.0-test  --root /home/rares/repos/CenterPoint-Default/CenterPoint-class-agnostic/data/nuscenes/v1.0-test    
+python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  --version v1.0-test  --root /home/rares/repos/CenterPoint/data/nuscenes//v1.0-test    
 ```
 
 ### Test Set 
