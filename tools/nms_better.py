@@ -23,7 +23,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Ensemble Models")
     parser.add_argument("ensemble_dir", help="path to a dir that contains all prediction file")
     parser.add_argument("--output_path", help="the path to save ensemble output")    
-    parser.add_argument("--data_root", type=str, default="/home/rares/repos/CenterPoint/data/nuscenes//v1.0-trainval") 
+    parser.add_argument("--data_root", type=str, default="/home/rares/repos/CenterPoint-Default/CenterPoint-class-agnostic/data/nuscenes/v1.0-trainval") 
     
     args = parser.parse_args()
 

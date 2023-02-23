@@ -82,7 +82,7 @@ You can find the detection files are in the [MODEL ZOO](../configs/nusc/README.m
 python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  
 
 # test set 
-python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  --version v1.0-test  --root /home/rares/repos/CenterPoint/data/nuscenes//v1.0-test    
+python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  --version v1.0-test  --root /home/rares/repos/CenterPoint-Default/CenterPoint-class-agnostic/data/nuscenes/v1.0-test    
 ```
 
 ### Test Set 
