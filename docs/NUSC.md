@@ -32,9 +32,10 @@ Data creation should be under the gpu environment.
 python tools/create_data.py nuscenes_data_prep --root_path=NUSCENES_TRAINVAL_DATASET_ROOT --version="v1.0-trainval" --nsweeps=10
 ```
 
-### current project:
-
-python tools/create_data.py nuscenes_data_prep --root_path=/home/rares/repos/CenterPoint-class-agnostic/data/nuscenes --version="v1.0-trainval" --nsweeps=10
+### <font color="red">current project</font>:
+```
+python tools/create_data.py nuscenes_data_prep --root_path=data/nuscenes --version="v1.0-trainval" --nsweeps=10
+```
 
 
 In the end, the data and info files should be organized as follows
@@ -58,7 +59,7 @@ In the end, the data and info files should be organized as follows
 
 **Now we only support training and evaluation with gpu. Cpu only mode is not supported.**
 
-**class-agnostic CenterPoint - 1 GPU train**
+**<font color="red">class-agnostic CenterPoint - 1 GPU train**</font>
 ```bash
 python -m torch.distributed.launch --nproc_per_node=1 ./tools/train.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py
 ```
