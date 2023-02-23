@@ -65,7 +65,7 @@ python -m torch.distributed.launch --nproc_per_node=1 ./tools/train.py configs/n
 ```
 ### <span style="color:red">RESUME TRAINING</span>
 ```bash
-python ./tools/train.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --resume
+python ./tools/train.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --resume-from work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth
 ```
 
 **class-agnostic CenterPoint - 1 GPU test**
