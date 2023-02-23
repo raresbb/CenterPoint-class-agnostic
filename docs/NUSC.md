@@ -58,7 +58,11 @@ In the end, the data and info files should be organized as follows
 
 **Now we only support training and evaluation with gpu. Cpu only mode is not supported.**
 
-**class-agnostic CenterPoint - 1 GPU**
+**class-agnostic CenterPoint - 1 GPU train**
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 ./tools/train.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py
+```
+**class-agnostic CenterPoint - 1 GPU test**
 ```bash
 python ./tools/dist_test.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --work_dir work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/ --checkpoint work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth --speed_test
 ```
