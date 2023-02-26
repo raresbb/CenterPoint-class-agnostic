@@ -93,7 +93,7 @@ data_root = "data/nuscenes/"
 db_sampler = dict(
     type="GT-AUG",
     enable=False,
-    db_info_path="/home/rares/repos/CenterPoint/data/nuscenes//dbinfos_train_10sweeps_withvelo_virtual.pkl",
+    db_info_path="/media/rares/PortableSSD/nuscenes/train/data/nuscenes/dbinfos_train_10sweeps_withvelo_virtual.pkl",
     sample_groups=[
         dict(car=2),
         dict(truck=3),
@@ -166,8 +166,8 @@ test_pipeline = [
     dict(type="Reformat"),
 ]
 
-train_anno = "/home/rares/repos/CenterPoint/data/nuscenes//infos_train_10sweeps_withvelo_filter_True.pkl"
-val_anno = "/home/rares/repos/CenterPoint/data/nuscenes//infos_val_10sweeps_withvelo_filter_True.pkl"
+train_anno = "/media/rares/PortableSSD/nuscenes/train/data/nuscenes/infos_train_10sweeps_withvelo_filter_True.pkl"
+val_anno = "/media/rares/PortableSSD/nuscenes/train/data/nuscenes/infos_val_10sweeps_withvelo_filter_True.pkl"
 test_anno = None
 
 data = dict(
