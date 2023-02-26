@@ -92,52 +92,30 @@ nsweeps = 10
 #data_root = "data/nuscenes/"
 data_root = "/media/rares/PortableSSD/nuscenes/train/data/nuscenes/"
 
+"""
+sample_groups specify the number of points to sample from the object class 
+when performing ground truth augmentation (GTA) during training.
+For example, in the first line dict(car=2) means that during GTA, 
+only 2 points will be sampled from the ground truth bounding boxes of car objects. 
+Lower numbers will introduce less noise, but may not be enough to help the model generalize to new scenarios. 
+Higher numbers will introduce more noise, but may help the model better learn to handle more challenging scenarios.
+"""
+
+"""
+filtering will only keep the objects with a minimum of 5 points
+"""
+
 db_sampler = dict(
     type="GT-AUG",
     enable=False,
     db_info_path="/media/rares/PortableSSD/nuscenes/train/data/nuscenes/dbinfos_train_10sweeps_withvelo.pkl",
-    """
-    sample_groups specify the number of points to sample from the object class 
-    when performing ground truth augmentation (GTA) during training.
-    For example, in the first line dict(car=2) means that during GTA, 
-    only 2 points will be sampled from the ground truth bounding boxes of car objects. 
-    Lower numbers will introduce less noise, but may not be enough to help the model generalize to new scenarios. 
-    Higher numbers will introduce more noise, but may help the model better learn to handle more challenging scenarios.
-    """
     sample_groups=[
-        dict(object=2)
-        """
-        dict(car=2),
-        dict(truck=3),
-        dict(construction_vehicle=7),
-        dict(bus=4),
-        dict(trailer=6),
-        dict(barrier=2),
-        dict(motorcycle=6),
-        dict(bicycle=6),
-        dict(pedestrian=2),
-        dict(traffic_cone=2),
-        """
+        dict(object=2),
     ],
-    """
-    filtering will only keep the objects with a minimum of 5 points
-    """
     db_prep_steps=[
         dict(
             filter_by_min_num_points=dict( 
                 object = 5
-                """
-                car=5,
-                truck=5,
-                bus=5,
-                trailer=5,
-                construction_vehicle=5,
-                traffic_cone=5,
-                barrier=5,
-                motorcycle=5,
-                bicycle=5,
-                pedestrian=5,
-                """
             )
         ),
         dict(filter_by_difficulty=[-1],),
