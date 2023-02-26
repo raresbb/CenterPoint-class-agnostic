@@ -2,7 +2,7 @@ import itertools
 import logging
 
 from det3d.utils.config_tool import get_downsample_factor
-
+"""
 tasks = [
     dict(num_class=1, class_names=["car"]),
     dict(num_class=2, class_names=["truck", "construction_vehicle"]),
@@ -11,6 +11,10 @@ tasks = [
     dict(num_class=2, class_names=["motorcycle", "bicycle"]),
     dict(num_class=2, class_names=["pedestrian", "traffic_cone"]),
 ]
+"""
+tasks =[
+    dict(num_class = 1, class_names=["object"])
+] 
 
 class_names = list(itertools.chain(*[t["class_names"] for t in tasks]))
 
@@ -85,13 +89,24 @@ test_cfg = dict(
 # dataset settings
 dataset_type = "NuScenesDataset"
 nsweeps = 10
-data_root = "data/nuscenes/"
+#data_root = "data/nuscenes/"
+data_root = "/media/rares/PortableSSD/nuscenes/train/data/nuscenes/"
 
 db_sampler = dict(
     type="GT-AUG",
     enable=False,
     db_info_path="/media/rares/PortableSSD/nuscenes/train/data/nuscenes/dbinfos_train_10sweeps_withvelo.pkl",
+    """
+    sample_groups specify the number of points to sample from the object class 
+    when performing ground truth augmentation (GTA) during training.
+    For example, in the first line dict(car=2) means that during GTA, 
+    only 2 points will be sampled from the ground truth bounding boxes of car objects. 
+    Lower numbers will introduce less noise, but may not be enough to help the model generalize to new scenarios. 
+    Higher numbers will introduce more noise, but may help the model better learn to handle more challenging scenarios.
+    """
     sample_groups=[
+        dict(object=2)
+        """
         dict(car=2),
         dict(truck=3),
         dict(construction_vehicle=7),
@@ -102,10 +117,16 @@ db_sampler = dict(
         dict(bicycle=6),
         dict(pedestrian=2),
         dict(traffic_cone=2),
+        """
     ],
+    """
+    filtering will only keep the objects with a minimum of 5 points
+    """
     db_prep_steps=[
         dict(
-            filter_by_min_num_points=dict(
+            filter_by_min_num_points=dict( 
+                object = 5
+                """
                 car=5,
                 truck=5,
                 bus=5,
@@ -116,6 +137,7 @@ db_sampler = dict(
                 motorcycle=5,
                 bicycle=5,
                 pedestrian=5,
+                """
             )
         ),
         dict(filter_by_difficulty=[-1],),
