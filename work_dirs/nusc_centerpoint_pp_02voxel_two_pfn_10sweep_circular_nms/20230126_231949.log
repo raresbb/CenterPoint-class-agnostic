@@ -1,2 +1,0 @@
-2023-01-26 23:19:49,631 - INFO - Start running, host: rares@ethical-puma, work_dir: /home/rares/repos/CenterPoint/work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms
-2023-01-26 23:19:49,632 - INFO - workflow: [('train', 1)], max: 20 epochs
