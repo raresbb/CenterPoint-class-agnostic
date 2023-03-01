@@ -133,6 +133,7 @@ class NuScenesDataset(PointCloudDataset):
         if "gt_boxes" not in self._nusc_infos[0]:
             return None
         cls_range_map = config_factory(self.eval_version).serialize()['class_range']
+        #cls_range_map = {'object': 50} # 50 maximum distance in meters at which an object can be detected
         gt_annos = []
         for info in self._nusc_infos:
             gt_names = np.array(info["gt_names"])
