@@ -90,7 +90,7 @@ test_cfg = dict(
 dataset_type = "NuScenesDataset"
 nsweeps = 10
 #data_root = "data/nuscenes/"
-data_root = "/home/rares/repos/CenterPoint-class-agnostic/data/nuscenes"
+data_root = "/media/rares/TOSHIBA/ca/data/nuscenes/"
 
 """
 sample_groups specify the number of points to sample from the object class 
@@ -108,7 +108,7 @@ filtering will only keep the objects with a minimum of 5 points
 db_sampler = dict(
     type="GT-AUG",
     enable=False,
-    db_info_path="/home/rares/repos/CenterPoint-class-agnostic/data/nuscenes/dbinfos_train_10sweeps_withvelo.pkl",
+    db_info_path="/media/rares/TOSHIBA/ca/data/nuscenes/dbinfos_train_10sweeps_withvelo.pkl",
     sample_groups=[
         dict(object=2),
     ],
@@ -161,8 +161,8 @@ test_pipeline = [
     dict(type="Reformat"),
 ]
 
-train_anno = "/home/rares/repos/CenterPoint-class-agnostic/data/nuscenes/infos_train_10sweeps_withvelo_filter_True.pkl"
-val_anno = "/home/rares/repos/CenterPoint-class-agnostic/data/nuscenes/infos_val_10sweeps_withvelo_filter_True.pkl"
+train_anno = "/media/rares/TOSHIBA/ca/data/nuscenes/infos_train_10sweeps_withvelo_filter_True.pkl"
+val_anno = "/media/rares/TOSHIBA/ca/data/nuscenes/infos_val_10sweeps_withvelo_filter_True.pkl"
 test_anno = None
 
 data = dict(
@@ -219,7 +219,7 @@ log_config = dict(
 )
 # yapf:enable
 # runtime settings
-total_epochs = 20
+total_epochs = 21
 device_ids = range(8)
 dist_params = dict(backend="nccl", init_method="env://")
 log_level = "INFO"

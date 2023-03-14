@@ -1,0 +1,63 @@
+{
+  "label_aps": {
+    "object": {
+      "0.5": 0.017222140037238903,
+      "1.0": 0.08669264407108569,
+      "2.0": 0.23028387646058915,
+      "4.0": 0.37165935156713537
+    }
+  },
+  "mean_dist_aps": {
+    "object": 0.1764645030340123
+  },
+  "mean_ap": 0.1764645030340123,
+  "label_tp_errors": {
+    "object": {
+      "trans_err": 0.739857222519981,
+      "scale_err": 0.5170460467332529,
+      "orient_err": 1.3883419749945858,
+      "vel_err": 1.0289107784100961,
+      "attr_err": 1.0
+    }
+  },
+  "tp_errors": {
+    "trans_err": 0.739857222519981,
+    "scale_err": 0.5170460467332529,
+    "orient_err": 1.3883419749945858,
+    "vel_err": 1.0289107784100961,
+    "attr_err": 1.0
+  },
+  "tp_scores": {
+    "trans_err": 0.260142777480019,
+    "scale_err": 0.48295395326674706,
+    "orient_err": 0.0,
+    "vel_err": 0.0,
+    "attr_err": 0.0
+  },
+  "nd_score": 0.16254192459168276,
+  "eval_time": 6.1962890625,
+  "cfg": {
+    "class_range": {
+      "object": 50
+    },
+    "dist_fcn": "center_distance",
+    "dist_ths": [
+      0.5,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "dist_th_tp": 2.0,
+    "min_recall": 0.1,
+    "min_precision": 0.1,
+    "max_boxes_per_sample": 500,
+    "mean_ap_weight": 5
+  },
+  "meta": {
+    "use_camera": false,
+    "use_lidar": true,
+    "use_radar": false,
+    "use_map": false,
+    "use_external": false
+  }
+}
