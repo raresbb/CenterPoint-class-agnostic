@@ -490,9 +490,10 @@ class Trainer(object):
         self._epoch = checkpoint["meta"]["epoch"]
         self._iter = checkpoint["meta"]["iter"]
         if "optimizer" in checkpoint and resume_optimizer:
-            #self.optimizer.load_state_dict(checkpoint["optimizer"])
+            self.optimizer.load_state_dict(checkpoint["optimizer"])
             """
             MODIFIED
+            """
             """
             # Load state dict
             optimizer_state_dict = checkpoint["optimizer"]
@@ -504,7 +505,7 @@ class Trainer(object):
                 if key in current_state_dict["state"] :
                     current_state_dict["state"][key] = optimizer_state_dict["state"][key]
             self.optimizer.load_state_dict(current_state_dict)   
-
+            """
         self.logger.info("resumed epoch %d, iter %d", self.epoch, self.iter)
 
     def run(self, data_loaders, workflow, max_epochs, **kwargs):

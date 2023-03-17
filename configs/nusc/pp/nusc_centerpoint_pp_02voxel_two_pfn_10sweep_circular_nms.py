@@ -36,7 +36,11 @@ model = dict(
         voxel_size=(0.2, 0.2, 8),
         pc_range=(-51.2, -51.2, -5.0, 51.2, 51.2, 3.0),
     ),
-    backbone=dict(type="PointPillarsScatter", ds_factor=1),
+    backbone=dict(
+        type="PointPillarsScatter", 
+        ds_factor=1,
+        pretrained = "/home/rares/repos/CenterPoint_pretrained/latest.pth"
+    ),
     neck=dict(
         type="RPN",
         layer_nums=[3, 5, 5],
@@ -46,6 +50,7 @@ model = dict(
         us_num_filters=[128, 128, 128],
         num_input_features=64,
         logger=logging.getLogger("RPN"),
+        pretrained = "/home/rares/repos/CenterPoint_pretrained/latest.pth"
     ),
     bbox_head=dict(
         # type='RPNHead',
@@ -90,7 +95,7 @@ test_cfg = dict(
 dataset_type = "NuScenesDataset"
 nsweeps = 10
 #data_root = "data/nuscenes/"
-data_root = "/media/rares/TOSHIBA/ca/data/nuscenes/"
+data_root = "/media/rares/TOSHIBA1/ca/data/nuscenes/"
 
 """
 sample_groups specify the number of points to sample from the object class 
@@ -108,7 +113,7 @@ filtering will only keep the objects with a minimum of 5 points
 db_sampler = dict(
     type="GT-AUG",
     enable=False,
-    db_info_path="/media/rares/TOSHIBA/ca/data/nuscenes/dbinfos_train_10sweeps_withvelo.pkl",
+    db_info_path="/media/rares/TOSHIBA1/ca/data/nuscenes/dbinfos_train_10sweeps_withvelo.pkl",
     sample_groups=[
         dict(object=2),
     ],
@@ -161,8 +166,8 @@ test_pipeline = [
     dict(type="Reformat"),
 ]
 
-train_anno = "/media/rares/TOSHIBA/ca/data/nuscenes/infos_train_10sweeps_withvelo_filter_True.pkl"
-val_anno = "/media/rares/TOSHIBA/ca/data/nuscenes/infos_val_10sweeps_withvelo_filter_True.pkl"
+train_anno = "/media/rares/TOSHIBA1/ca/data/nuscenes/infos_train_10sweeps_withvelo_filter_True.pkl"
+val_anno = "/media/rares/TOSHIBA1/ca/data/nuscenes/infos_val_10sweeps_withvelo_filter_True.pkl"
 test_anno = None
 
 data = dict(
@@ -219,7 +224,7 @@ log_config = dict(
 )
 # yapf:enable
 # runtime settings
-total_epochs = 21
+total_epochs = 20
 device_ids = range(8)
 dist_params = dict(backend="nccl", init_method="env://")
 log_level = "INFO"
