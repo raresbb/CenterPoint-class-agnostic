@@ -88,12 +88,12 @@ test_cfg = dict(
 # dataset settings
 dataset_type = "NuScenesDataset"
 nsweeps = 10
-data_root = "data/nuscenes/"
+data_root = "/media/rares/TOSHIBA1/ca/data/nuscenes/"
 
 db_sampler = dict(
     type="GT-AUG",
     enable=False,
-    db_info_path="/home/rares/repos/CenterPoint-Default/CenterPoint-class-agnostic/data/nuscenes/dbinfos_train_10sweeps_withvelo_virtual.pkl",
+    db_info_path="/media/rares/TOSHIBA1/ca/data/nuscenes/dbinfos_train_10sweeps_withvelo_virtual.pkl",
     sample_groups=[
         dict(car=2),
         dict(truck=3),
@@ -166,8 +166,8 @@ test_pipeline = [
     dict(type="Reformat"),
 ]
 
-train_anno = "/home/rares/repos/CenterPoint-Default/CenterPoint-class-agnostic/data/nuscenes/infos_train_10sweeps_withvelo_filter_True.pkl"
-val_anno = "/home/rares/repos/CenterPoint-Default/CenterPoint-class-agnostic/data/nuscenes/infos_val_10sweeps_withvelo_filter_True.pkl"
+train_anno = "/media/rares/TOSHIBA1/ca/data/nuscenes/infos_train_10sweeps_withvelo_filter_True.pkl"
+val_anno = "/media/rares/TOSHIBA1/ca/data/nuscenes/infos_val_10sweeps_withvelo_filter_True.pkl"
 test_anno = None
 
 data = dict(
