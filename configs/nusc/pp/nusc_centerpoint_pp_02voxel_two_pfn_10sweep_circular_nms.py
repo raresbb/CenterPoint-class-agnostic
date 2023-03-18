@@ -23,7 +23,6 @@ target_assigner = dict(
     tasks=tasks,
 )
 
-
 # model settings
 model = dict(
     type="PointPillars",
@@ -39,7 +38,6 @@ model = dict(
     backbone=dict(
         type="PointPillarsScatter", 
         ds_factor=1,
-        pretrained = "/home/rares/repos/CenterPoint_pretrained/latest.pth"
     ),
     neck=dict(
         type="RPN",
@@ -50,7 +48,6 @@ model = dict(
         us_num_filters=[128, 128, 128],
         num_input_features=64,
         logger=logging.getLogger("RPN"),
-        pretrained = "/home/rares/repos/CenterPoint_pretrained/latest.pth"
     ),
     bbox_head=dict(
         # type='RPNHead',
