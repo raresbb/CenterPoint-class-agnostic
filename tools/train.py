@@ -163,9 +163,9 @@ def main():
     parts_to_load = ['reader', 'neck']
     load_pretrained_weights(model, path_to_latest, parts_to_load)
     # Disable training for the specified parts
-    for name, param in model.named_parameters():
-        if any([name.startswith(part) for part in parts_to_load]):
-            param.requires_grad = False
+    #for name, param in model.named_parameters():
+    #    if any([name.startswith(part) for part in parts_to_load]):
+    #        param.requires_grad = False
     #for name, param in model.named_parameters():
     #    print(f"{name}: {param.requires_grad}")
     # END MODIFIED

@@ -46,13 +46,13 @@ def convert_box(info):
     detection['box3d_lidar'] = boxes
 
     # dummy value 
-    detection['label_preds'] = np.zeros(len(boxes)) 
+    detection['label_preds'] = names
     detection['scores'] = np.ones(len(boxes))
 
     return detection 
 
 def main():
-    cfg = Config.fromfile('configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_demo.py')
+    cfg = Config.fromfile('configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py')
     
     model = build_detector(cfg.model, train_cfg=None, test_cfg=cfg.test_cfg)
 
@@ -63,12 +63,12 @@ def main():
         batch_size=1,
         sampler=None,
         shuffle=False,
-        num_workers=8,
+        num_workers=0,
         collate_fn=collate_kitti,
         pin_memory=False,
     )
 
-    checkpoint = load_checkpoint(model, 'work_dirs/centerpoint_pillar_512_demo/latest.pth', map_location="cpu")
+    checkpoint = load_checkpoint(model, 'work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth', map_location="cpu")
     model.eval()
 
     model = model.cuda()
@@ -83,7 +83,8 @@ def main():
         info = dataset._nusc_infos[i]
         gt_annos.append(convert_box(info))
 
-        points = data_batch['points'][:, 1:4].cpu().numpy()
+        #points = data_batch['points'][:, 1:4].cpu().numpy()
+        points = data_batch['points'][0][:, 1:4].cpu().numpy()
         with torch.no_grad():
             outputs = batch_processor(
                 model, data_batch, train_mode=False, local_rank=0,
@@ -99,6 +100,9 @@ def main():
         points_list.append(points.T)
     
     print('Done model inference. Please wait a minute, the matplotlib is a little slow...')
+    
+    if not os.path.exists('demo'):
+        os.makedirs('demo')
     
     for i in range(len(points_list)):
         visual(points_list[i], gt_annos[i], detections[i], i)
