@@ -16,3 +16,5 @@ venv/
 .vscode/
 work_dirs/
 work_dirs_old/
+demo/
+*.avi

@@ -348,10 +348,6 @@ def visual(points, gt_anno, det, i, eval_range=50, conf_th=0.5):
     plt.savefig("demo/file%02d.png" % i)
     plt.close()
 
-    """
-    
-    """
-
 def remove_close(points, radius: float) -> None:
     """
     Removes point too close within a certain radius from origin.

@@ -34,10 +34,13 @@ import subprocess
 import cv2
 from tools.demo_utils import visual 
 from collections import defaultdict
+import gc
 
-def convert_box(info):
+def convert_box(info, info_def):
     boxes =  info["gt_boxes"].astype(np.float32)
-    names = info["gt_names"]
+    if info['token'] != info_def['token']:
+        print('ERROR TOKEN MISMATCH')
+    names = info_def["gt_names"]
 
     assert len(boxes) == len(names)
 
@@ -68,6 +71,10 @@ def main():
         pin_memory=False,
     )
 
+    cfg_def = Config.fromfile('configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms_def.py')
+    
+    dataset_def = build_dataset(cfg_def.data.val)
+
     checkpoint = load_checkpoint(model, 'work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth', map_location="cpu")
     model.eval()
 
@@ -79,35 +86,64 @@ def main():
     gt_annos = [] 
     detections  = [] 
 
-    for i, data_batch in enumerate(data_loader):
-        info = dataset._nusc_infos[i]
-        gt_annos.append(convert_box(info))
+    chunk_size = 100  # Set the chunk size to 100
+    num_chunks = len(data_loader) // chunk_size + (1 if len(data_loader) % chunk_size > 0 else 0)
 
-        #points = data_batch['points'][:, 1:4].cpu().numpy()
-        points = data_batch['points'][0][:, 1:4].cpu().numpy()
-        with torch.no_grad():
-            outputs = batch_processor(
-                model, data_batch, train_mode=False, local_rank=0,
-            )
-        for output in outputs:
-            for k, v in output.items():
-                if k not in [
-                    "metadata",
-                ]:
-                    output[k] = v.to(cpu_device)
-            detections.append(output)
+    data_loader_iterator = iter(data_loader)  # Create an iterator for the data_loader
 
-        points_list.append(points.T)
+    total_images = 0  # Add a variable to keep track of the total number of images
+
+    my_index = 0
+    for chunk_idx in range(num_chunks):
+        print(f'Processing chunk {chunk_idx + 1} of {num_chunks}')
+
+        for i in range(chunk_size):
+            my_index +=1
+            print(f"my_index {my_index}")
+            
+            try:
+                data_batch = next(data_loader_iterator)  # Get the next data_batch using the iterator
+            except StopIteration:
+                break
+
+            idx = chunk_idx * chunk_size + i
+            print(f"idx: {idx}")
+            info = dataset._nusc_infos[idx]
+            info_def = dataset_def._nusc_infos[idx]
+            gt_annos.append(convert_box(info, info_def))
+
+            points = data_batch['points'][0][:, 1:4].cpu().numpy()
+            with torch.no_grad():
+                outputs = batch_processor(
+                    model, data_batch, train_mode=False, local_rank=0,
+                )
+            for output in outputs:
+                for k, v in output.items():
+                    if k not in ["metadata"]:
+                        output[k] = v.to(cpu_device)
+                detections.append(output)
+
+            points_list.append(points.T)
+
+        print('Done model inference. Please wait a minute, the matplotlib is a little slow...')
     
-    print('Done model inference. Please wait a minute, the matplotlib is a little slow...')
-    
-    if not os.path.exists('demo'):
-        os.makedirs('demo')
-    
-    for i in range(len(points_list)):
-        visual(points_list[i], gt_annos[i], detections[i], i)
-        print("Rendered Image {}".format(i))
-    
+        if not os.path.exists('demo'):
+            os.makedirs('demo')
+        
+        for i in range(len(points_list)):
+            visual(points_list[i], gt_annos[i], detections[i], total_images + i)  # Pass total_images + i instead of i
+            print("Rendered Image {}".format(total_images + i))  # Print total_images + i instead of i
+        
+        total_images += len(points_list)  # Increment total_images by the number of images in the current chunk
+
+        # Clear the lists after processing each chunk
+        points_list.clear()
+        gt_annos.clear()
+        detections.clear()
+
+        # Call the garbage collector to free up memory
+        gc.collect()
+
     image_folder = 'demo'
     video_name = 'video.avi'
 
@@ -116,8 +152,8 @@ def main():
     frame = cv2.imread(os.path.join(image_folder, images[0]))
     height, width, layers = frame.shape
 
-    video = cv2.VideoWriter(video_name, 0, 1, (width,height))
-    cv2_images = [] 
+    video = cv2.VideoWriter(video_name, 0, 1, (width, height))
+    cv2_images = []
 
     for image in images:
         cv2_images.append(cv2.imread(os.path.join(image_folder, image)))
@@ -128,7 +164,7 @@ def main():
     cv2.destroyAllWindows()
     video.release()
 
-    print("Successfully save video in the main folder")
+    print("Successfully saved video in the main folder")
 
 if __name__ == "__main__":
     main()
