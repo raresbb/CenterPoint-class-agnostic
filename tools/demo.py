@@ -99,7 +99,6 @@ def main():
 
         for i in range(chunk_size):
             my_index +=1
-            print(f"my_index {my_index}")
             
             try:
                 data_batch = next(data_loader_iterator)  # Get the next data_batch using the iterator
@@ -107,7 +106,6 @@ def main():
                 break
 
             idx = chunk_idx * chunk_size + i
-            print(f"idx: {idx}")
             info = dataset._nusc_infos[idx]
             info_def = dataset_def._nusc_infos[idx]
             gt_annos.append(convert_box(info, info_def))
@@ -123,7 +121,7 @@ def main():
                         output[k] = v.to(cpu_device)
                 detections.append(output)
 
-            points_list.append(points.T)
+            points_list.append(points)
 
         print('Done model inference. Please wait a minute, the matplotlib is a little slow...')
     

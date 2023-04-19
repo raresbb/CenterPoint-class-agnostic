@@ -288,7 +288,7 @@ def visual(points, gt_anno, det, i, eval_range=50, conf_th=0.5):
     class_color_map = {
         'car': 'b',
         'truck': 'g',
-        'bus': 'k',
+        'bus': 'purple',
         'trailer': 'c',
         'construction_vehicle': 'm',
         'pedestrian': 'y',
@@ -330,7 +330,12 @@ def visual(points, gt_anno, det, i, eval_range=50, conf_th=0.5):
     # Create a rectangle centered at (0, 0) representing the ego vehicle
     ego_vehicle = plt.Rectangle((-ego_vehicle_width / 2, -ego_vehicle_length / 2),
                             ego_vehicle_width, ego_vehicle_length,
-                            edgecolor='red', facecolor='none', linewidth=2)
+                            edgecolor='black', facecolor='none', linewidth=2)
+
+    # Draw an X in the box of the ego vehicle
+    x_offset, y_offset = ego_vehicle_width / 2, ego_vehicle_length / 2
+    plt.plot([-x_offset, x_offset], [-y_offset, y_offset], color='black', linewidth=2)
+    plt.plot([-x_offset, x_offset], [y_offset, -y_offset], color='black', linewidth=2)
 
     # Add the ego vehicle rectangle to the current plot
     ax.add_patch(ego_vehicle)
@@ -341,7 +346,14 @@ def visual(points, gt_anno, det, i, eval_range=50, conf_th=0.5):
     ax.set_ylim(-axes_limit, axes_limit)
     plt.axis('off')
     
-    legend_elements = [Patch(facecolor=class_color_map[label], edgecolor=class_color_map[label], label=label) for label in detected_classes]
+    
+    legend_elements = [Patch(facecolor='black', edgecolor='black', label='ego_vehicle'),    Patch(facecolor='red', edgecolor='red', label='prediction')]
+    for label in detected_classes:
+        if label not in ['ego_vehicle', 'prediction']:
+            legend_elements.append(
+                Patch(facecolor=class_color_map[label], edgecolor=class_color_map[label], label=label)
+            )
+    #legend_elements = [Patch(facecolor=class_color_map[label], edgecolor=class_color_map[label], label=label) for label in detected_classes]
     ax.legend(handles=legend_elements, loc='upper right')
 
 
