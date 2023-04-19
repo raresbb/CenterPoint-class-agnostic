@@ -5,13 +5,15 @@ import os.path as osp
 import struct
 from abc import ABC, abstractmethod
 from functools import reduce
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Union
 
 import cv2
 import numpy as np
 from matplotlib.axes import Axes
 from pyquaternion import Quaternion
-from matplotlib import pyplot as plt 
+from matplotlib import pyplot as plt
+from matplotlib.patches import Patch
+
 
 
 def view_points(points: np.ndarray, view: np.ndarray, normalize: bool) -> np.ndarray:
@@ -80,7 +82,7 @@ class Box:
                  center: List[float],
                  size: List[float],
                  orientation: Quaternion,
-                 label: int = np.nan,
+                 label: Union[str, None] = None,
                  score: float = np.nan,
                  velocity: Tuple = (np.nan, np.nan, np.nan),
                  name: str = None,
@@ -89,7 +91,7 @@ class Box:
         :param center: Center of box given as x, y, z.
         :param size: Size of box in width, length, height.
         :param orientation: Box orientation.
-        :param label: Integer label, optional.
+        :param label: String label, optional.
         :param score: Classification score, optional.
         :param velocity: Box velocity in x, y, z direction.
         :param name: Box name, optional. Can be used e.g. for denote category name.
@@ -105,7 +107,7 @@ class Box:
         self.center = np.array(center)
         self.wlh = np.array(size)
         self.orientation = orientation
-        self.label = int(label) if not np.isnan(label) else label
+        self.label = label
         self.score = float(score) if not np.isnan(score) else score
         self.velocity = np.array(velocity)
         self.name = name
@@ -115,7 +117,7 @@ class Box:
         center = np.allclose(self.center, other.center)
         wlh = np.allclose(self.wlh, other.wlh)
         orientation = np.allclose(self.orientation.elements, other.orientation.elements)
-        label = (self.label == other.label) or (np.isnan(self.label) and np.isnan(other.label))
+        label = (self.label == other.label) or (self.label is None and other.label is None)
         score = (self.score == other.score) or (np.isnan(self.score) and np.isnan(other.score))
         vel = (np.allclose(self.velocity, other.velocity) or
                (np.all(np.isnan(self.velocity)) and np.all(np.isnan(other.velocity))))
@@ -281,7 +283,20 @@ class Box:
         return copy.deepcopy(self)
 
 
-def visual(points, gt_anno, det, i, eval_range=35, conf_th=0.5):
+def visual(points, gt_anno, det, i, eval_range=50, conf_th=0.5):
+    # Define a color map for object classes
+    class_color_map = {
+        'car': 'b',
+        'truck': 'g',
+        'bus': 'k',
+        'trailer': 'c',
+        'construction_vehicle': 'm',
+        'pedestrian': 'y',
+        'motorcycle': 'grey',
+        'bicycle': 'orange',
+        'traffic_cone': 'darkblue',
+        'barrier': 'pink',
+    }
     _, ax = plt.subplots(1, 1, figsize=(9, 9), dpi=200)
     points = remove_close(points, radius=3)
     points = view_points(points[:3, :], np.eye(4), normalize=False)
@@ -293,24 +308,45 @@ def visual(points, gt_anno, det, i, eval_range=35, conf_th=0.5):
     boxes_gt = _second_det_to_nusc_box(gt_anno)
     boxes_est = _second_det_to_nusc_box(det)
 
+    detected_classes = set()
+
     # Show GT boxes.
     for box in boxes_gt:
-        box.render(ax, view=np.eye(4), colors=('r', 'r', 'r'), linewidth=2)
+        if box.label == 'ignore':
+            continue
+        box_color = class_color_map.get(box.label, 'gray')
+        box.render(ax, view=np.eye(4), colors=(box_color, box_color, box_color), linewidth=2)
+        detected_classes.add(box.label)
 
     # Show EST boxes.
     for box in boxes_est:
         if box.score >= conf_th:
-            box.render(ax, view=np.eye(4), colors=('b', 'b', 'b'), linewidth=1)
+            box.render(ax, view=np.eye(4), colors=('r', 'r', 'r'), linewidth=1)
+
+    # Ego vehicle dimensions (length, width) in meters
+    ego_vehicle_length = 4.5
+    ego_vehicle_width = 2.0
+
+    # Create a rectangle centered at (0, 0) representing the ego vehicle
+    ego_vehicle = plt.Rectangle((-ego_vehicle_width / 2, -ego_vehicle_length / 2),
+                            ego_vehicle_width, ego_vehicle_length,
+                            edgecolor='red', facecolor='none', linewidth=2)
+
+    # Add the ego vehicle rectangle to the current plot
+    ax.add_patch(ego_vehicle)
 
 
     axes_limit = eval_range + 3  # Slightly bigger to include boxes that extend beyond the range.
     ax.set_xlim(-axes_limit, axes_limit)
     ax.set_ylim(-axes_limit, axes_limit)
     plt.axis('off')
+    
+    legend_elements = [Patch(facecolor=class_color_map[label], edgecolor=class_color_map[label], label=label) for label in detected_classes]
+    ax.legend(handles=legend_elements, loc='upper right')
+
 
     plt.savefig("demo/file%02d.png" % i)
     plt.close()
-
 
 def remove_close(points, radius: float) -> None:
     """
