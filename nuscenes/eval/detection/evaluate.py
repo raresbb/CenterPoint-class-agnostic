@@ -81,18 +81,18 @@ class DetectionEval:
                                                      verbose=verbose)
         self.gt_boxes = load_gt(self.nusc, self.eval_set, DetectionBox, verbose=verbose)
 
-        
         assert set(self.pred_boxes.sample_tokens) == set(self.gt_boxes.sample_tokens), \
             "Samples in split doesn't match samples in predictions."
 
         # Add center distances.
         self.pred_boxes = add_center_dist(nusc, self.pred_boxes)
         self.gt_boxes = add_center_dist(nusc, self.gt_boxes)
-
+        
         # Filter boxes (distance, points per box, etc.).
         if verbose:
             print('Filtering predictions')
         self.pred_boxes = filter_eval_boxes(nusc, self.pred_boxes, self.cfg.class_range, verbose=verbose)
+        
         if verbose:
             print('Filtering ground truth annotations')
         self.gt_boxes = filter_eval_boxes(nusc, self.gt_boxes, self.cfg.class_range, verbose=verbose)
@@ -111,8 +111,6 @@ class DetectionEval:
 
         self.cfg.class_names = {'car': None, 'truck': None, 'bus': None, 'trailer': None, 'construction_vehicle': None, 
                                 'pedestrian': None, 'motorcycle': None, 'bicycle': None, 'traffic_cone': None, 'barrier': None}.keys()
-        # Remove 'object' key
-        #self.cfg.class_range.pop('object', None)
 
         # Add other keys with value of 50
         self.cfg.class_range = {'car': 50, 'truck': 50, 'bus': 50, 'trailer': 50, 'construction_vehicle': 50, 
@@ -122,10 +120,11 @@ class DetectionEval:
         # Step 1: Accumulate metric data for all classes and distance thresholds.
         # -----------------------------------
         if self.verbose:
-            print('Accumulating metric data...')
+            print('Accumulating metric data...X')
         metric_data_list = DetectionMetricDataList()
 
         for class_name in self.cfg.class_names:
+            print('Current class name: ' + class_name)
             for dist_th in self.cfg.dist_ths:
                 md = accumulate(self.gt_boxes, self.pred_boxes, class_name, self.cfg.dist_fcn_callable, dist_th)
                 metric_data_list.set(class_name, dist_th, md)

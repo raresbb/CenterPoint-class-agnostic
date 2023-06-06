@@ -3,7 +3,7 @@
 
 from typing import List, Optional
 
-# START MODIFIED RARES
+
 def category_to_detection_name(category_name: str) -> Optional[str]:
     """
     Default label mapping from nuScenes to nuScenes detection classes.
@@ -32,7 +32,7 @@ def category_to_detection_name(category_name: str) -> Optional[str]:
         return detection_mapping[category_name]
     else:
         return None
-# END MODIFIED RARES
+
 def category_to_detection_name_default(category_name: str) -> Optional[str]:
     """
     Default label mapping from nuScenes to nuScenes detection classes.

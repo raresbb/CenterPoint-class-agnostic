@@ -9,6 +9,8 @@ from nuscenes.eval.common.data_classes import EvalBoxes
 from nuscenes.eval.common.utils import center_distance, scale_iou, yaw_diff, velocity_l2, attr_acc, cummean
 from nuscenes.eval.detection.data_classes import DetectionMetricData
 
+import pickle
+from scipy.stats import gaussian_kde
 
 def accumulate(gt_boxes: EvalBoxes,
                pred_boxes: EvalBoxes,
@@ -32,7 +34,7 @@ def accumulate(gt_boxes: EvalBoxes,
     # ---------------------------------------------
 
     # Count the positives.
-    npos = len([1 for gt_box in gt_boxes.all if gt_box.detection_name_default == class_name])
+    npos = len([1 for gt_box in gt_boxes.all if gt_box.detection_name == class_name])
     if verbose:
         print("Found {} GT of class {} out of {} total across {} samples.".
               format(npos, class_name, len(gt_boxes.all), len(gt_boxes.sample_tokens)))
@@ -86,9 +88,8 @@ def accumulate(gt_boxes: EvalBoxes,
 
         # If the closest match is close enough according to threshold we have a match!
         is_match = min_dist < dist_th
-        is_close = min_dist < 4.0
 
-        if is_match and is_close:
+        if is_match:
             taken.add((pred_box.sample_token, match_gt_idx))
 
             #  Update tp, fp and confs.
@@ -110,16 +111,25 @@ def accumulate(gt_boxes: EvalBoxes,
             match_data['attr_err'].append(1 - attr_acc(gt_box_match, pred_box))
             match_data['conf'].append(pred_box.detection_score)
 
-        if not is_match and is_close:
-            # No match. Mark this as a false positive.
-            tp.append(0)
-            fp.append(1)
-            conf.append(pred_box.detection_score)
+        else:
+            pass
 
     # Check if we have any matches. If not, just return a "no predictions" array.
     if len(match_data['trans_err']) == 0:
         return DetectionMetricData.no_predictions()
 
+    # Accumulate FPs based on the class-aware kde & proportionality factor
+    filename = '/home/rares/repos/misc/class_kde.pkl'
+    with open(filename, 'rb') as f:
+        data = pickle.load(f)
+    kde_bytes, factor = data[class_name][str(dist_th)]['kde'], data[class_name][str(dist_th)]['prop_factor']
+    kde = pickle.loads(kde_bytes)  # deserialize the kde object
+    num_fps = int(factor * len(pred_boxes_list))
+    fps = kde.resample(num_fps)[0]
+    for fp in fps:
+        fp.append(1)
+        tp.append(0)
+        conf.append(fp[0])
     # ---------------------------------------------
     # Calculate and interpolate precision and recall
     # ---------------------------------------------

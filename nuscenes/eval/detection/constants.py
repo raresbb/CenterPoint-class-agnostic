@@ -1,16 +1,38 @@
 # nuScenes dev-kit.
 # Code written by Oscar Beijbom and Varun Bankiti, 2019.
 
-# START MODIFIED RARES
-# Variable definiton for class-agnostic CenterPoint
+DETECTION_NAMES_DEF = ['car', 'truck', 'bus', 'trailer', 'construction_vehicle', 'pedestrian', 'motorcycle', 'bicycle',
+                   'traffic_cone', 'barrier']
+
 DETECTION_NAMES = ['object']
+
+
+PRETTY_DETECTION_NAMES_DEF = {'car': 'Car',
+                          'truck': 'Truck',
+                          'bus': 'Bus',
+                          'trailer': 'Trailer',
+                          'construction_vehicle': 'Constr. Veh.',
+                          'pedestrian': 'Pedestrian',
+                          'motorcycle': 'Motorcycle',
+                          'bicycle': 'Bicycle',
+                          'traffic_cone': 'Traffic Cone',
+                          'barrier': 'Barrier'}
 
 PRETTY_DETECTION_NAMES = {'object': 'Object'}
 
+
+DETECTION_COLORS_DEF = {'car': 'C0',
+                    'truck': 'C1',
+                    'bus': 'C2',
+                    'trailer': 'C3',
+                    'construction_vehicle': 'C4',
+                    'pedestrian': 'C5',
+                    'motorcycle': 'C6',
+                    'bicycle': 'C7',
+                    'traffic_cone': 'C8',
+                    'barrier': 'C9'}
+
 DETECTION_COLORS = {'object': 'C0'}
-# END MODIFIED RARES
-
-
 ATTRIBUTE_NAMES = ['pedestrian.moving', 'pedestrian.sitting_lying_down', 'pedestrian.standing', 'cycle.with_rider',
                    'cycle.without_rider', 'vehicle.moving', 'vehicle.parked', 'vehicle.stopped']
 

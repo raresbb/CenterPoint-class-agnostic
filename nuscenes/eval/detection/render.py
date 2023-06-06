@@ -252,7 +252,6 @@ def summary_plot(md_list: DetectionMetricDataList,
     :param savepath: If given, saves the the rendering here instead of displaying.
     """
     n_classes = len(DETECTION_NAMES_DEF)
-    # START MODIFIED RARES
     _, axes = plt.subplots(nrows=n_classes, ncols=2, figsize=(15, 5 * n_classes))
     #_, axes = plt.subplots(nrows=1, ncols=2, figsize=(15, 5))
     for ind, detection_name in enumerate(DETECTION_NAMES_DEF):
@@ -264,7 +263,6 @@ def summary_plot(md_list: DetectionMetricDataList,
 
         ax2 = setup_axis(xlim=1, title=title2, min_recall=min_recall, ax=axes[ind, 1])
         #ax2 = setup_axis(xlim=1, title=title2, min_recall=min_recall, ax=axes[1])
-        # END MODIFIED RARES
         if ind == n_classes - 1:
             ax1.set_xlabel('Recall', size=20)
             ax2.set_xlabel('Recall', size=20)

@@ -76,12 +76,10 @@ class TestDetectionMetrics(unittest.TestCase):
 
     def test_serialization(self):
         """ Test that instance serialization protocol works with json encoding. """
-        
+
         cfg = {
             'class_range': {
-            # START MODIFIED RARES
                 'object': 1.0,
-            # END MODIFIED RARES
             },
             'dist_fcn': 'distance',
             'dist_ths': [0.0, 1.0],
