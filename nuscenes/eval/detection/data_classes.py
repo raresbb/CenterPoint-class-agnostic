@@ -8,7 +8,7 @@ import numpy as np
 
 from nuscenes.eval.common.data_classes import MetricData, EvalBox
 from nuscenes.eval.common.utils import center_distance
-from nuscenes.eval.detection.constants import DETECTION_NAMES, ATTRIBUTE_NAMES, TP_METRICS, DETECTION_NAMES_DEF
+from nuscenes.eval.detection.constants import DETECTION_NAMES, ATTRIBUTE_NAMES, TP_METRICS
 
 
 class DetectionConfig:
@@ -324,27 +324,24 @@ class DetectionBox(EvalBox):
                  ego_translation: [float, float, float] = (0, 0, 0),  # Translation to ego vehicle in meters.
                  num_pts: int = -1,  # Nbr. LIDAR or RADAR inside the box. Only for gt boxes.
                  detection_name: str = 'car',  # The class name used in the detection challenge.
-                 detection_name_default: str = 'car',  # The class name used in the detection challenge.
                  detection_score: float = -1.0,  # GT samples do not have a score.
                  attribute_name: str = ''):  # Box attribute. Each box can have at most 1 attribute.
 
         super().__init__(sample_token, translation, size, rotation, velocity, ego_translation, num_pts)
 
         assert detection_name is not None, 'Error: detection_name cannot be empty!'
-        assert detection_name in DETECTION_NAMES or detection_name in DETECTION_NAMES_DEF, 'Error: Unknown detection_name %s' % detection_name
+        assert detection_name in DETECTION_NAMES, 'Error: Unknown detection_name %s' % detection_name
 
-        #assert attribute_name in ATTRIBUTE_NAMES or attribute_name == '', \
-        #   'Error: Unknown attribute_name %s' % attribute_name
+        assert attribute_name in ATTRIBUTE_NAMES or attribute_name == '', \
+            'Error: Unknown attribute_name %s' % attribute_name
 
         assert type(detection_score) == float, 'Error: detection_score must be a float!'
         assert not np.any(np.isnan(detection_score)), 'Error: detection_score may not be NaN!'
 
         # Assign.
         self.detection_name = detection_name
-        self.detection_name_default = detection_name_default
         self.detection_score = detection_score
-        #self.attribute_name = attribute_name
-        self.attribute_name = attribute_name if attribute_name is not None else ''
+        self.attribute_name = attribute_name
 
     def __eq__(self, other):
         return (self.sample_token == other.sample_token and

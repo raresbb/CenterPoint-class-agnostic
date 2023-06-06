@@ -12,7 +12,7 @@ from nuscenes.eval.common.data_classes import EvalBoxes
 from nuscenes.eval.common.render import setup_axis
 from nuscenes.eval.common.utils import boxes_to_sensor
 from nuscenes.eval.detection.constants import TP_METRICS, DETECTION_NAMES, DETECTION_COLORS, TP_METRICS_UNITS, \
-    PRETTY_DETECTION_NAMES, PRETTY_TP_METRICS, DETECTION_COLORS_DEF, DETECTION_NAMES_DEF, PRETTY_DETECTION_NAMES_DEF
+    PRETTY_DETECTION_NAMES, PRETTY_TP_METRICS
 from nuscenes.eval.detection.data_classes import DetectionMetrics, DetectionMetricData, DetectionMetricDataList
 from nuscenes.utils.data_classes import LidarPointCloud
 from nuscenes.utils.geometry_utils import view_points
@@ -122,7 +122,7 @@ def class_pr_curve(md_list: DetectionMetricDataList,
     """
     # Prepare axis.
     if ax is None:
-        ax = setup_axis(title=PRETTY_DETECTION_NAMES_DEF[detection_name], xlabel='Recall', ylabel='Precision', xlim=1,
+        ax = setup_axis(title=PRETTY_DETECTION_NAMES[detection_name], xlabel='Recall', ylabel='Precision', xlim=1,
                         ylim=1, min_precision=min_precision, min_recall=min_recall)
 
     # Get recall vs precision values of given class for each distance threshold.
@@ -169,7 +169,7 @@ def class_tp_curve(md_list: DetectionMetricDataList,
 
     # Prepare axis.
     if ax is None:
-        ax = setup_axis(title=PRETTY_DETECTION_NAMES_DEF[detection_name], xlabel='Recall', ylabel='Error', xlim=1,
+        ax = setup_axis(title=PRETTY_DETECTION_NAMES[detection_name], xlabel='Recall', ylabel='Error', xlim=1,
                         min_recall=min_recall)
     ax.set_ylim(0, ylimit)
 
@@ -225,8 +225,8 @@ def dist_pr_curve(md_list: DetectionMetricDataList,
     for md, detection_name in data:
         md = md_list[(detection_name, dist_th)]
         ap = metrics.get_label_ap(detection_name, dist_th)
-        ax.plot(md.recall, md.precision, label='{}: {:.1f}%'.format(PRETTY_DETECTION_NAMES_DEF[detection_name], ap * 100),
-                color=DETECTION_COLORS_DEF[detection_name])
+        ax.plot(md.recall, md.precision, label='{}: {:.1f}%'.format(PRETTY_DETECTION_NAMES[detection_name], ap * 100),
+                color=DETECTION_COLORS[detection_name])
     hx, lx = ax.get_legend_handles_labels()
     lax.legend(hx, lx, borderaxespad=0)
     lax.axis("off")
@@ -251,18 +251,16 @@ def summary_plot(md_list: DetectionMetricDataList,
     :param dist_th_tp: The distance threshold used to determine matches.
     :param savepath: If given, saves the the rendering here instead of displaying.
     """
-    n_classes = len(DETECTION_NAMES_DEF)
+    n_classes = len(DETECTION_NAMES)
     _, axes = plt.subplots(nrows=n_classes, ncols=2, figsize=(15, 5 * n_classes))
-    #_, axes = plt.subplots(nrows=1, ncols=2, figsize=(15, 5))
-    for ind, detection_name in enumerate(DETECTION_NAMES_DEF):
+    for ind, detection_name in enumerate(DETECTION_NAMES):
         title1, title2 = ('Recall vs Precision', 'Recall vs Error') if ind == 0 else (None, None)
 
         ax1 = setup_axis(xlim=1, ylim=1, title=title1, min_precision=min_precision,
                          min_recall=min_recall, ax=axes[ind, 0])
-        ax1.set_ylabel('{} \n \n Precision'.format(PRETTY_DETECTION_NAMES_DEF[detection_name]), size=20)
+        ax1.set_ylabel('{} \n \n Precision'.format(PRETTY_DETECTION_NAMES[detection_name]), size=20)
 
         ax2 = setup_axis(xlim=1, title=title2, min_recall=min_recall, ax=axes[ind, 1])
-        #ax2 = setup_axis(xlim=1, title=title2, min_recall=min_recall, ax=axes[1])
         if ind == n_classes - 1:
             ax1.set_xlabel('Recall', size=20)
             ax2.set_xlabel('Recall', size=20)
@@ -294,14 +292,14 @@ def detailed_results_table_tex(metrics_path: str, output_path: str) -> None:
            '\\textbf{AVE}   & ' \
            '\\textbf{AAE}   \\\\ \\hline ' \
            '\\hline\n'
-    for name in DETECTION_NAMES_DEF:
+    for name in DETECTION_NAMES:
         ap = np.mean(metrics['label_aps'][name].values()) * 100
         ate = metrics['label_tp_errors'][name]['trans_err']
         ase = metrics['label_tp_errors'][name]['scale_err']
         aoe = metrics['label_tp_errors'][name]['orient_err']
         ave = metrics['label_tp_errors'][name]['vel_err']
         aae = metrics['label_tp_errors'][name]['attr_err']
-        tex_name = PRETTY_DETECTION_NAMES_DEF[name]
+        tex_name = PRETTY_DETECTION_NAMES[name]
         if name == 'traffic_cone':
             tex += '{}  &   {:.1f}  &   {:.2f}  &   {:.2f}  &   N/A  &   N/A  &   N/A  \\\\ \\hline\n'.format(
                 tex_name, ap, ate, ase)

@@ -11,7 +11,7 @@ from pyquaternion import Quaternion
 from nuscenes import NuScenes
 from nuscenes.eval.common.data_classes import EvalBoxes
 from nuscenes.eval.detection.data_classes import DetectionBox
-from nuscenes.eval.detection.utils import category_to_detection_name, category_to_detection_name_default
+from nuscenes.eval.detection.utils import category_to_detection_name
 from nuscenes.eval.tracking.data_classes import TrackingBox
 from nuscenes.utils.data_classes import Box
 from nuscenes.utils.geometry_utils import points_in_box
@@ -115,7 +115,6 @@ def load_gt(nusc: NuScenes, eval_split: str, box_cls, verbose: bool = False) -> 
             if box_cls == DetectionBox:
                 # Get label name in detection task and filter unused labels.
                 detection_name = category_to_detection_name(sample_annotation['category_name'])
-                detection_name_default = category_to_detection_name_default(sample_annotation['category_name'])
                 if detection_name is None:
                     continue
 
@@ -138,7 +137,6 @@ def load_gt(nusc: NuScenes, eval_split: str, box_cls, verbose: bool = False) -> 
                         velocity=nusc.box_velocity(sample_annotation['token'])[:2],
                         num_pts=sample_annotation['num_lidar_pts'] + sample_annotation['num_radar_pts'],
                         detection_name=detection_name,
-                        detection_name_default = detection_name_default,
                         detection_score=-1.0,  # GT samples do not have a score.
                         attribute_name=attribute_name
                     )

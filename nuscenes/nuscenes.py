@@ -82,7 +82,6 @@ class NuScenes:
 
         # Initialize the colormap which maps from class names to RGB values.
         self.colormap = get_colormap()
-
         lidar_tasks = [t for t in ['lidarseg', 'panoptic'] if osp.exists(osp.join(self.table_root, t + '.json'))]
         if len(lidar_tasks) > 0:
             self.lidarseg_idx2name_mapping = dict()
@@ -133,6 +132,7 @@ class NuScenes:
 
     def __load_table__(self, table_name) -> dict:
         """ Loads a table. """
+        print(self.table_root)
         with open(osp.join(self.table_root, '{}.json'.format(table_name))) as f:
             table = json.load(f)
         return table

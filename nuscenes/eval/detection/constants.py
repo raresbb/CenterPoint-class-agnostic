@@ -1,13 +1,10 @@
 # nuScenes dev-kit.
 # Code written by Oscar Beijbom and Varun Bankiti, 2019.
 
-DETECTION_NAMES_DEF = ['car', 'truck', 'bus', 'trailer', 'construction_vehicle', 'pedestrian', 'motorcycle', 'bicycle',
+DETECTION_NAMES = ['car', 'truck', 'bus', 'trailer', 'construction_vehicle', 'pedestrian', 'motorcycle', 'bicycle',
                    'traffic_cone', 'barrier']
 
-DETECTION_NAMES = ['object']
-
-
-PRETTY_DETECTION_NAMES_DEF = {'car': 'Car',
+PRETTY_DETECTION_NAMES = {'car': 'Car',
                           'truck': 'Truck',
                           'bus': 'Bus',
                           'trailer': 'Trailer',
@@ -18,10 +15,7 @@ PRETTY_DETECTION_NAMES_DEF = {'car': 'Car',
                           'traffic_cone': 'Traffic Cone',
                           'barrier': 'Barrier'}
 
-PRETTY_DETECTION_NAMES = {'object': 'Object'}
-
-
-DETECTION_COLORS_DEF = {'car': 'C0',
+DETECTION_COLORS = {'car': 'C0',
                     'truck': 'C1',
                     'bus': 'C2',
                     'trailer': 'C3',
@@ -32,7 +26,6 @@ DETECTION_COLORS_DEF = {'car': 'C0',
                     'traffic_cone': 'C8',
                     'barrier': 'C9'}
 
-DETECTION_COLORS = {'object': 'C0'}
 ATTRIBUTE_NAMES = ['pedestrian.moving', 'pedestrian.sitting_lying_down', 'pedestrian.standing', 'cycle.with_rider',
                    'cycle.without_rider', 'vehicle.moving', 'vehicle.parked', 'vehicle.stopped']
 

@@ -79,7 +79,16 @@ class TestDetectionMetrics(unittest.TestCase):
 
         cfg = {
             'class_range': {
-                'object': 1.0,
+                'car': 1.0,
+                'truck': 1.0,
+                'bus': 1.0,
+                'trailer': 1.0,
+                'construction_vehicle': 1.0,
+                'pedestrian': 1.0,
+                'motorcycle': 1.0,
+                'bicycle': 1.0,
+                'traffic_cone': 1.0,
+                'barrier': 1.0
             },
             'dist_fcn': 'distance',
             'dist_ths': [0.0, 1.0],

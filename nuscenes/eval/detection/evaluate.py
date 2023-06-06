@@ -19,7 +19,7 @@ from nuscenes.eval.detection.constants import TP_METRICS
 from nuscenes.eval.detection.data_classes import DetectionConfig, DetectionMetrics, DetectionBox, \
     DetectionMetricDataList
 from nuscenes.eval.detection.render import summary_plot, class_pr_curve, class_tp_curve, dist_pr_curve, visualize_sample
-from nuscenes.eval.detection.config import config_factory_def
+
 
 class DetectionEval:
     """
@@ -87,12 +87,11 @@ class DetectionEval:
         # Add center distances.
         self.pred_boxes = add_center_dist(nusc, self.pred_boxes)
         self.gt_boxes = add_center_dist(nusc, self.gt_boxes)
-        
+
         # Filter boxes (distance, points per box, etc.).
         if verbose:
             print('Filtering predictions')
         self.pred_boxes = filter_eval_boxes(nusc, self.pred_boxes, self.cfg.class_range, verbose=verbose)
-        
         if verbose:
             print('Filtering ground truth annotations')
         self.gt_boxes = filter_eval_boxes(nusc, self.gt_boxes, self.cfg.class_range, verbose=verbose)
@@ -106,25 +105,13 @@ class DetectionEval:
         """
         start_time = time.time()
 
-        for gt_box in self.gt_boxes.all: 
-            gt_box.detection_name = gt_box.detection_name_default
-
-        self.cfg.class_names = {'car': None, 'truck': None, 'bus': None, 'trailer': None, 'construction_vehicle': None, 
-                                'pedestrian': None, 'motorcycle': None, 'bicycle': None, 'traffic_cone': None, 'barrier': None}.keys()
-
-        # Add other keys with value of 50
-        self.cfg.class_range = {'car': 50, 'truck': 50, 'bus': 50, 'trailer': 50, 'construction_vehicle': 50, 
-                              'pedestrian': 50, 'motorcycle': 50, 'bicycle': 50, 'traffic_cone': 50, 'barrier': 50}
-
         # -----------------------------------
         # Step 1: Accumulate metric data for all classes and distance thresholds.
         # -----------------------------------
         if self.verbose:
             print('Accumulating metric data...X')
         metric_data_list = DetectionMetricDataList()
-
         for class_name in self.cfg.class_names:
-            print('Current class name: ' + class_name)
             for dist_th in self.cfg.dist_ths:
                 md = accumulate(self.gt_boxes, self.pred_boxes, class_name, self.cfg.dist_fcn_callable, dist_th)
                 metric_data_list.set(class_name, dist_th, md)
