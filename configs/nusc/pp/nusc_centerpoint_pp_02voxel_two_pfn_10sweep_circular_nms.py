@@ -2,7 +2,7 @@ import itertools
 import logging
 
 from det3d.utils.config_tool import get_downsample_factor
-"""
+
 tasks = [
     dict(num_class=1, class_names=["car"]),
     dict(num_class=2, class_names=["truck", "construction_vehicle"]),
@@ -11,10 +11,6 @@ tasks = [
     dict(num_class=2, class_names=["motorcycle", "bicycle"]),
     dict(num_class=2, class_names=["pedestrian", "traffic_cone"]),
 ]
-"""
-tasks =[
-    dict(num_class = 1, class_names=["object"])
-] 
 
 class_names = list(itertools.chain(*[t["class_names"] for t in tasks]))
 
@@ -22,6 +18,7 @@ class_names = list(itertools.chain(*[t["class_names"] for t in tasks]))
 target_assigner = dict(
     tasks=tasks,
 )
+
 
 # model settings
 model = dict(
@@ -35,10 +32,7 @@ model = dict(
         voxel_size=(0.2, 0.2, 8),
         pc_range=(-51.2, -51.2, -5.0, 51.2, 51.2, 3.0),
     ),
-    backbone=dict(
-        type="PointPillarsScatter", 
-        ds_factor=1,
-    ),
+    backbone=dict(type="PointPillarsScatter", ds_factor=1),
     neck=dict(
         type="RPN",
         layer_nums=[3, 5, 5],
@@ -91,33 +85,37 @@ test_cfg = dict(
 # dataset settings
 dataset_type = "NuScenesDataset"
 nsweeps = 10
-#data_root = "data/nuscenes/"
-data_root = "/media/rares/TOSHIBA1/ca/data/nuscenes/"
-
-"""
-sample_groups specify the number of points to sample from the object class 
-when performing ground truth augmentation (GTA) during training.
-For example, in the first line dict(car=2) means that during GTA, 
-only 2 points will be sampled from the ground truth bounding boxes of car objects. 
-Lower numbers will introduce less noise, but may not be enough to help the model generalize to new scenarios. 
-Higher numbers will introduce more noise, but may help the model better learn to handle more challenging scenarios.
-"""
-
-"""
-filtering will only keep the objects with a minimum of 5 points
-"""
+data_root = "data/nuScenes"
 
 db_sampler = dict(
     type="GT-AUG",
     enable=False,
-    db_info_path="/media/rares/TOSHIBA1/ca/data/nuscenes/dbinfos_train_10sweeps_withvelo.pkl",
+    db_info_path="data/nuScenes/dbinfos_train_10sweeps_withvelo.pkl",
     sample_groups=[
-        dict(object=2),
+        dict(car=2),
+        dict(truck=3),
+        dict(construction_vehicle=7),
+        dict(bus=4),
+        dict(trailer=6),
+        dict(barrier=2),
+        dict(motorcycle=6),
+        dict(bicycle=6),
+        dict(pedestrian=2),
+        dict(traffic_cone=2),
     ],
     db_prep_steps=[
         dict(
-            filter_by_min_num_points=dict( 
-                object = 5
+            filter_by_min_num_points=dict(
+                car=5,
+                truck=5,
+                bus=5,
+                trailer=5,
+                construction_vehicle=5,
+                traffic_cone=5,
+                barrier=5,
+                motorcycle=5,
+                bicycle=5,
+                pedestrian=5,
             )
         ),
         dict(filter_by_difficulty=[-1],),
@@ -163,8 +161,8 @@ test_pipeline = [
     dict(type="Reformat"),
 ]
 
-train_anno = "/media/rares/TOSHIBA1/ca/data/nuscenes/infos_train_10sweeps_withvelo_filter_True.pkl"
-val_anno = "/media/rares/TOSHIBA1/ca/data/nuscenes/infos_val_10sweeps_withvelo_filter_True.pkl"
+train_anno = "data/nuScenes/infos_train_10sweeps_withvelo_filter_True.pkl"
+val_anno = "data/nuScenes/infos_val_10sweeps_withvelo_filter_True.pkl"
 test_anno = None
 
 data = dict(

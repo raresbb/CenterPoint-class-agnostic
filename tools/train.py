@@ -2,7 +2,7 @@ import argparse
 import json
 import os
 import sys
-from collections import OrderedDict
+
 from numba.core.errors import NumbaDeprecationWarning, NumbaPendingDeprecationWarning, NumbaWarning
 import warnings
 warnings.simplefilter('ignore', category=NumbaDeprecationWarning)
@@ -53,31 +53,12 @@ def parse_args():
         action="store_true",
         help="automatically scale lr with the number of gpus",
     )
-    parser.add_argument(
-        "--resume-from",
-        default=None,
-        help="the checkpoint file to resume from"
-    )
     args = parser.parse_args()
     if "LOCAL_RANK" not in os.environ:
         os.environ["LOCAL_RANK"] = str(args.local_rank)
 
     return args
 
-# START MODIFIED
-def load_pretrained_weights(model, checkpoint_path, parts):
-    checkpoint = torch.load(checkpoint_path)
-    state_dict = checkpoint['state_dict']
-    new_state_dict = OrderedDict()
-
-    for key, value in state_dict.items():
-        for part in parts:
-            if key.startswith(part):
-                new_state_dict[key] = value
-                break
-
-    model.load_state_dict(new_state_dict, strict=False)
-# END MODIFIED
 
 def main():
 
@@ -89,7 +70,7 @@ def main():
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
-    
+
     # update configs according to CLI args
     if args.work_dir is not None:
         cfg.work_dir = args.work_dir
@@ -102,7 +83,7 @@ def main():
 
     if distributed:
         if args.launcher == "pytorch":
-            #torch.cuda.set_device(args.local_rank)
+            torch.cuda.set_device(args.local_rank)
             torch.distributed.init_process_group(backend="nccl", init_method="env://")
             cfg.local_rank = args.local_rank
         elif args.launcher == "slurm":
@@ -111,7 +92,7 @@ def main():
             node_list = os.environ["SLURM_NODELIST"]
             num_gpus = torch.cuda.device_count()
             cfg.gpus = num_gpus
-            #torch.cuda.set_device(proc_id % num_gpus)
+            torch.cuda.set_device(proc_id % num_gpus)
             addr = subprocess.getoutput(
                 f"scontrol show hostname {node_list} | head -n1")
             # specify master port
@@ -158,17 +139,6 @@ def main():
         set_random_seed(args.seed)
 
     model = build_detector(cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg)
-    # START MODIFIED 
-    path_to_latest = "/home/rares/repos/CenterPoint_pretrained/latest.pth"
-    parts_to_load = ['reader', 'neck']
-    load_pretrained_weights(model, path_to_latest, parts_to_load)
-    # Disable training for the specified parts
-    #for name, param in model.named_parameters():
-    #    if any([name.startswith(part) for part in parts_to_load]):
-    #        param.requires_grad = False
-    #for name, param in model.named_parameters():
-    #    print(f"{name}: {param.requires_grad}")
-    # END MODIFIED
 
     datasets = [build_dataset(cfg.data.train)]
 
@@ -192,7 +162,6 @@ def main():
         validate=args.validate,
         logger=logger,
     )
-    print("train detector built")
 
 
 if __name__ == "__main__":

@@ -87,12 +87,12 @@ test_cfg = dict(
 # dataset settings
 dataset_type = "NuScenesDataset"
 nsweeps = 10
-data_root = "data/nuscenes/"
+data_root = "data/nuScenes"
 
 db_sampler = dict(
     type="GT-AUG",
     enable=False,
-    db_info_path="/media/rares/PortableSSD/nuscenes/train/data/nuscenes/dbinfos_train_10sweeps_withvelo.pkl",
+    db_info_path="data/nuScenes/dbinfos_train_10sweeps_withvelo.pkl",
     sample_groups=[
         dict(car=2),
         dict(truck=3),
@@ -167,9 +167,9 @@ test_pipeline = [
     dict(type="Reformat", double_flip=DOUBLE_FLIP),
 ]
 
-train_anno = "/media/rares/PortableSSD/nuscenes/train/data/nuscenes/infos_train_10sweeps_withvelo_filter_True.pkl"
-val_anno = "/media/rares/PortableSSD/nuscenes/train/data/nuscenes/infos_val_10sweeps_withvelo_filter_True.pkl"
-test_anno = "/media/rares/PortableSSD/nuscenes/train/data/nuscenes/infos_test_10sweeps_withvelo_filter_True.pkl"
+train_anno = "data/nuScenes/infos_train_10sweeps_withvelo_filter_True.pkl"
+val_anno = "data/nuScenes/infos_val_10sweeps_withvelo_filter_True.pkl"
+test_anno = "data/nuScenes/infos_test_10sweeps_withvelo_filter_True.pkl"
 
 data = dict(
     samples_per_gpu=4,

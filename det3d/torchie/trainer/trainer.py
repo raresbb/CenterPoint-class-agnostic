@@ -352,8 +352,7 @@ class Trainer(object):
     def batch_processor_inline(self, model, data, train_mode, **kwargs):
 
         if "local_rank" in kwargs:
-            #device = torch.device(kwargs["local_rank"])
-            device = torch.device("cuda", kwargs["local_rank"])
+            device = torch.device(kwargs["local_rank"])
         else:
             device = None
 
@@ -491,21 +490,7 @@ class Trainer(object):
         self._iter = checkpoint["meta"]["iter"]
         if "optimizer" in checkpoint and resume_optimizer:
             self.optimizer.load_state_dict(checkpoint["optimizer"])
-            """
-            MODIFIED
-            """
-            """
-            # Load state dict
-            optimizer_state_dict = checkpoint["optimizer"]
-            # Manually update the optimizer's state dict
-            current_state_dict = self.optimizer.state_dict()
-            # Update parameter groups
-            current_state_dict["params_groups"] = optimizer_state_dict["param_groups"]  
-            for key in optimizer_state_dict["state"].keys():
-                if key in current_state_dict["state"] :
-                    current_state_dict["state"][key] = optimizer_state_dict["state"][key]
-            self.optimizer.load_state_dict(current_state_dict)   
-            """
+
         self.logger.info("resumed epoch %d, iter %d", self.epoch, self.iter)
 
     def run(self, data_loaders, workflow, max_epochs, **kwargs):

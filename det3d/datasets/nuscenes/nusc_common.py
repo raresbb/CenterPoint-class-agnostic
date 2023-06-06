@@ -19,34 +19,33 @@ except:
     print("nuScenes devkit not Found!")
 
 general_to_detection = {
-    "human.pedestrian.adult": "object",
-    "human.pedestrian.child": "object",
+    "human.pedestrian.adult": "pedestrian",
+    "human.pedestrian.child": "pedestrian",
     "human.pedestrian.wheelchair": "ignore",
     "human.pedestrian.stroller": "ignore",
     "human.pedestrian.personal_mobility": "ignore",
-    "human.pedestrian.police_officer": "object",
-    "human.pedestrian.construction_worker": "object",
+    "human.pedestrian.police_officer": "pedestrian",
+    "human.pedestrian.construction_worker": "pedestrian",
     "animal": "ignore",
-    "vehicle.car": "object",
-    "vehicle.motorcycle": "object",
-    "vehicle.bicycle": "object",
-    "vehicle.bus.bendy": "object",
-    "vehicle.bus.rigid": "object",
-    "vehicle.truck": "object",
-    "vehicle.construction": "object",
+    "vehicle.car": "car",
+    "vehicle.motorcycle": "motorcycle",
+    "vehicle.bicycle": "bicycle",
+    "vehicle.bus.bendy": "bus",
+    "vehicle.bus.rigid": "bus",
+    "vehicle.truck": "truck",
+    "vehicle.construction": "construction_vehicle",
     "vehicle.emergency.ambulance": "ignore",
     "vehicle.emergency.police": "ignore",
-    "vehicle.trailer": "object",
-    "movable_object.barrier": "object",
-    "movable_object.trafficcone": "object",
+    "vehicle.trailer": "trailer",
+    "movable_object.barrier": "barrier",
+    "movable_object.trafficcone": "traffic_cone",
     "movable_object.pushable_pullable": "ignore",
     "movable_object.debris": "ignore",
     "static_object.bicycle_rack": "ignore",
 }
 
 cls_attr_dist = {
-    # barrier
-    "object": {
+    "barrier": {
         "cycle.with_rider": 0,
         "cycle.without_rider": 0,
         "pedestrian.moving": 0,
@@ -56,8 +55,7 @@ cls_attr_dist = {
         "vehicle.parked": 0,
         "vehicle.stopped": 0,
     },
-    # bicycle
-    "object": {
+    "bicycle": {
         "cycle.with_rider": 2791,
         "cycle.without_rider": 8946,
         "pedestrian.moving": 0,
@@ -67,8 +65,7 @@ cls_attr_dist = {
         "vehicle.parked": 0,
         "vehicle.stopped": 0,
     },
-    # bus
-    "object": {
+    "bus": {
         "cycle.with_rider": 0,
         "cycle.without_rider": 0,
         "pedestrian.moving": 0,
@@ -78,8 +75,7 @@ cls_attr_dist = {
         "vehicle.parked": 3294,
         "vehicle.stopped": 3881,
     },
-    # car
-    "object": {
+    "car": {
         "cycle.with_rider": 0,
         "cycle.without_rider": 0,
         "pedestrian.moving": 0,
@@ -89,8 +85,7 @@ cls_attr_dist = {
         "vehicle.parked": 330133,
         "vehicle.stopped": 46898,
     },
-    # construction_vehicle
-    "object": {
+    "construction_vehicle": {
         "cycle.with_rider": 0,
         "cycle.without_rider": 0,
         "pedestrian.moving": 0,
@@ -110,8 +105,7 @@ cls_attr_dist = {
         "vehicle.parked": 400,
         "vehicle.stopped": 102,
     },
-    # motorcycle
-    "object": {
+    "motorcycle": {
         "cycle.with_rider": 4233,
         "cycle.without_rider": 8326,
         "pedestrian.moving": 0,
@@ -121,8 +115,7 @@ cls_attr_dist = {
         "vehicle.parked": 0,
         "vehicle.stopped": 0,
     },
-    # pedestrian
-    "object": {
+    "pedestrian": {
         "cycle.with_rider": 0,
         "cycle.without_rider": 0,
         "pedestrian.moving": 157444,
@@ -132,8 +125,7 @@ cls_attr_dist = {
         "vehicle.parked": 0,
         "vehicle.stopped": 0,
     },
-    # traffic_cone
-    "object": {
+    "traffic_cone": {
         "cycle.with_rider": 0,
         "cycle.without_rider": 0,
         "pedestrian.moving": 0,
@@ -143,8 +135,7 @@ cls_attr_dist = {
         "vehicle.parked": 0,
         "vehicle.stopped": 0,
     },
-    # trailer
-    "object": {
+    "trailer": {
         "cycle.with_rider": 0,
         "cycle.without_rider": 0,
         "pedestrian.moving": 0,
@@ -154,8 +145,7 @@ cls_attr_dist = {
         "vehicle.parked": 19224,
         "vehicle.stopped": 1895,
     },
-    # truck
-    "object": {
+    "truck": {
         "cycle.with_rider": 0,
         "cycle.without_rider": 0,
         "pedestrian.moving": 0,

@@ -25,8 +25,6 @@ from det3d.datasets.nuscenes.nusc_common import (
 )
 from det3d.datasets.registry import DATASETS
 
-#import pdb; pdb.set_trace()
-
 
 @DATASETS.register_module
 class NuScenesDataset(PointCloudDataset):
@@ -133,7 +131,6 @@ class NuScenesDataset(PointCloudDataset):
         if "gt_boxes" not in self._nusc_infos[0]:
             return None
         cls_range_map = config_factory(self.eval_version).serialize()['class_range']
-        #cls_range_map = {'object': 50} # 50 maximum distance in meters at which an object can be detected
         gt_annos = []
         for info in self._nusc_infos:
             gt_names = np.array(info["gt_names"])
@@ -230,13 +227,7 @@ class NuScenesDataset(PointCloudDataset):
                 mapped_class_names.append(self._name_mapping[n])
             else:
                 mapped_class_names.append(n)
-        """
-         adding attributes like this may require additional labeling effort and 
-         could potentially introduce more noise into the data. 
-         Therefore, it is important to carefully consider whether 
-         the benefits of adding such attributes outweigh the costs.
-        """
-        """
+
         for det in dets:
             annos = []
             boxes = _second_det_to_nusc_box(det)
@@ -280,26 +271,6 @@ class NuScenesDataset(PointCloudDataset):
                 }
                 annos.append(nusc_anno)
             nusc_annos["results"].update({det["metadata"]["token"]: annos})
-        """
-        for det in dets:
-            annos = []
-            boxes = _second_det_to_nusc_box(det)
-            boxes = _lidar_nusc_box_to_global(nusc, boxes, det["metadata"]["token"])
-            for i, box in enumerate(boxes):
-                name = "object"
-                nusc_anno = {
-                    "sample_token": det["metadata"]["token"],
-                    "translation": box.center.tolist(),
-                    "size": box.wlh.tolist(),
-                    "rotation": box.orientation.elements.tolist(),
-                    "velocity": box.velocity[:2].tolist(),
-                    "detection_name": name,
-                    "detection_score": box.score,
-                    "attribute_name": None,
-                } 
-                annos.append(nusc_anno)
-            nusc_annos["results"].update({det["metadata"]["token"]: annos})
-
 
         nusc_annos["meta"] = {
             "use_camera": False,

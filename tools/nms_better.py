@@ -23,7 +23,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Ensemble Models")
     parser.add_argument("ensemble_dir", help="path to a dir that contains all prediction file")
     parser.add_argument("--output_path", help="the path to save ensemble output")    
-    parser.add_argument("--data_root", type=str, default="/media/rares/PortableSSD/nuscenes/train/data/nuscenes/v1.0-trainval") 
+    parser.add_argument("--data_root", type=str, default="data/nuScenes/v1.0-trainval") 
     
     args = parser.parse_args()
 
@@ -79,7 +79,6 @@ def concatenate_list(lists):
 
     return ret 
 
-"""
 ENS_CLASS = ['car', 'truck', 'bus', 'construction_vehicle', 'bicycle']
 SMALL_CLASS = ['pedestrian', 'barrier', 'traffic_cone', 'motorcycle']
 LARGE_CLASS = ['trailer']
@@ -103,22 +102,6 @@ def filter_pred_by_class(preds, small=False, large=False):
         ret_dict[token] = filtered
 
     return ret_dict 
-"""
-
-ALL_CLASS = ['object']
-
-def filter_pred_by_class(preds):
-    ret_dict = {} 
-    for token, pred in preds.items():
-        filtered = []
-
-        for item in pred:
-            assert item['detection_name'] in ALL_CLASS
-            filtered.append(item)
-
-        ret_dict[token] = filtered
-
-    return ret_dict
 
 def get_pred(path):
     with open(path, 'rb') as f:

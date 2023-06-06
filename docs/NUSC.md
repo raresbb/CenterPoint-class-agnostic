@@ -32,12 +32,6 @@ Data creation should be under the gpu environment.
 python tools/create_data.py nuscenes_data_prep --root_path=NUSCENES_TRAINVAL_DATASET_ROOT --version="v1.0-trainval" --nsweeps=10
 ```
 
-### <font color="red">current project</font>:
-```
-python tools/create_data.py nuscenes_data_prep --root_path=data/nuscenes --version="v1.0-trainval" --nsweeps=10
-```
-
-
 In the end, the data and info files should be organized as follows
 
 ```
@@ -58,20 +52,6 @@ In the end, the data and info files should be organized as follows
 ### Train & Evaluate in Command Line
 
 **Now we only support training and evaluation with gpu. Cpu only mode is not supported.**
-
-**<font color="red">class-agnostic CenterPoint - 1 GPU train**</font>
-```bash
-python -m torch.distributed.launch --nproc_per_node=1 ./tools/train.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py
-```
-**class-agnostic CenterPoint - 1 GPU test**
-```bash
-python ./tools/dist_test.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --work_dir work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/ --checkpoint work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth --speed_test
-```
-
-### <span style="color:red">RESUME TRAINING</span>
-```bash
-python ./tools/train.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --resume-from work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth
-```
 
 Use the following command to start a distributed training using 4 GPUs. The models and logs will be saved to ```work_dirs/CONFIG_NAME``` 
 
@@ -102,7 +82,7 @@ You can find the detection files are in the [MODEL ZOO](../configs/nusc/README.m
 python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  
 
 # test set 
-python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  --version v1.0-test  --root /media/rares/PortableSSD/nuscenes/train/data/nuscenes/v1.0-test    
+python tools/nusc_tracking/pub_test.py --work_dir WORK_DIR_PATH  --checkpoint DETECTION_PATH  --version v1.0-test  --root data/nuScenes/v1.0-test    
 ```
 
 ### Test Set 
@@ -134,9 +114,4 @@ Download the ```centerpoint_voxel_1440_flip``` [here](https://mitprod-my.sharepo
 
 ```bash
 python tools/dist_test.py configs/nusc/voxelnet/nusc_centerpoint_voxelnet_0075voxel_fix_bn_z_flip.py --work_dir work_dirs/nusc_centerpoint_voxelnet_dcn_0075voxel_flip_testset  --checkpoint work_dirs/nusc_0075_flip/voxelnet_converted.pth  --testset 
-```
-
-**class-agnostic CenterPoint - 1 GPU test**
-```bash
-python tools/dist_test.py configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py --work_dir work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms_test --checkpoint work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth  --testset 
 ```
