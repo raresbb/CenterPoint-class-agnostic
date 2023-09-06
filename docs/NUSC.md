@@ -72,6 +72,7 @@ python ./tools/dist_test.py CONFIG_PATH --work_dir work_dirs/CONFIG_NAME --check
 ```
 
 <span style="color:red;">Evaluation:</span>:
+
 ```bash
 python ./tools/dist_test.py /home/rares/repos/CenterPoint-class-specific/configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py
  --work_dir work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms --checkpoint work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth --speed_test 
