@@ -71,6 +71,10 @@ For testing with one gpu and see the inference time,
 python ./tools/dist_test.py CONFIG_PATH --work_dir work_dirs/CONFIG_NAME --checkpoint work_dirs/CONFIG_NAME/latest.pth --speed_test 
 ```
 
+<font color="red">speed_test</font>:
+python ./tools/dist_test.py /home/rares/repos/CenterPoint-class-specific/configs/nusc/pp/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms.py
+ --work_dir work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms --checkpoint work_dirs/nusc_centerpoint_pp_02voxel_two_pfn_10sweep_circular_nms/latest.pth --speed_test 
+
 The pretrained models and configurations are in [MODEL ZOO](../configs/nusc/README.md).
 
 ### Tracking
